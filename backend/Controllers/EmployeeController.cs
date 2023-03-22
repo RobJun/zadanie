@@ -9,6 +9,7 @@ using backend.models;
 
 namespace backend.Controllers
 {
+    
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
@@ -83,16 +84,44 @@ namespace backend.Controllers
         // POST: api/Employee
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Employee>> PostEmployees(Employee employees)
+        public async Task<ActionResult<Employee>> PostEmployees(EmployeeCreation e)
         {
           if (_context.Employees == null)
           {
-              return Problem("Entity set 'EmployeeContext.Employees'  is null.");
+            return Problem("Entity set 'EmployeeContext.Employees'  is null.");
           }
-            _context.Employees.Add(employees);
+          if(DateOnly.FromDateTime(DateTime.Now) <= e.DateOfBirth){
+            return BadRequest($"Date of birth should be smaller than {DateOnly.FromDateTime(DateTime.Now)}");
+          }
+          if(DateOnly.FromDateTime(DateTime.Now) > e.StartingDate){
+            return BadRequest($"Starting date should be greater or equal to {DateOnly.FromDateTime(DateTime.Now)}");
+          }
+
+            var employee = new Employee(){
+                Name = e.Name,
+                LastName = e.LastName,
+                Address = e.Address,
+                DateOfBirth = e.DateOfBirth,
+                StartingDate = e.StartingDate,
+                Salary = e.Salary
+
+            };
+            
+            var position = new PositionsEmployee() {
+                Employee = employee,
+                PositionId = e.PositionId,
+                Position = await _context.Positions.FindAsync(e.PositionId),
+                Start = e.StartingDate
+            };
+
+            //employee.Positions.Add(position);
+
+
+           //_context.Employees.Add(employee);
+            _context.PositionsEmployees.Add(position);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEmployees", new { id = employees.id }, employees);
+            return CreatedAtAction("GetEmployees", new { id = employee.id }, employee);
         }
 
         // DELETE: api/Employee/5
