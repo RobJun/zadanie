@@ -28,6 +28,9 @@ export default {
     .employee_row {
         display: grid;
         grid-template-columns: 40% 40% 10% 10%;
+        padding-bottom: 5px;
+        margin-bottom: 5px;
+        border-bottom: 1px solid black;
     }
 
     .employee_row > h2 {

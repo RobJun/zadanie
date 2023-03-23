@@ -6,32 +6,32 @@
     <main class="container">
     <div class="row">
     <div class="col-8">
-    <h1>Detail pre: Meno Priezvisko</h1>
+    <h1 v-if="">Detail pre: Meno Priezvisko</h1>
     <form>
         <div class="row">
             <div class="col-md-6 form-group">
                 <label for="name">Meno</label>
-                <input type="text" class="form-control" id="name">
+                <input type="text" class="form-control" id="name" :disabled="$route.hash !== '#edit'">
             </div>
             <div class="col-md-6 form-group">
                 <label for="lastName">Priezvisko</label>
-                <input type="text" class="form-control" id="lastName">
+                <input type="text" class="form-control" id="lastName" :disabled="$route.hash !== '#edit'">
             </div>
         </div>
         <div class="row">
             <div class="col-md-6 form-group">
                 <label for="dateOfBirth">Dátum narodenia</label>
-                <input type="date" class="form-control" id="dateOfBirth">
+                <input type="date" class="form-control" id="dateOfBirth" :disabled="$route.hash !== '#edit'">
             </div>
             <div class="col-md-6 form-group">
                 <label for="startingDate">Deň nástupu</label>
-                <input type="date" class="form-control" id="startingDate">
+                <input type="date" class="form-control" id="startingDate" :disabled="$route.hash !== '#edit'">
             </div>
         </div>
         <div class="row">
             <div class="col-md-6 form-group">
                 <label for="position">Pozícia</label>
-                <select class="form-select mb-3" id="position" aria-label=".form-select-lg">
+                <select class="form-select mb-3" id="position" aria-label=".form-select-lg" :disabled="$route.hash !== '#edit'">
                     <option selected>Open this select menu</option>
                     <option value="1">One</option>
                     <option value="2">Two</option>
@@ -40,7 +40,7 @@
             </div>
             <div class="col-md-6 form-group">
                 <label for="salary">Plat</label>
-                <input id="salary" type="number" min="0.01" step="any" class="form-control"  />
+                <input id="salary" type="number" min="0.01" step="any" class="form-control" :disabled="$route.hash !== '#edit'"/>
             </div>
         </div>
         <button class="btn btn-primary">Ulozit zmeny</button>
