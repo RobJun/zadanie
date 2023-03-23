@@ -94,13 +94,19 @@ namespace backend.Controllers
             if(employee == null){
                 return NotFound();
             }
-            List<PositionsEmployee> p = employee.Positions.ToList();
-            var index = p.FindIndex(i=> i.End == null);
 
+            var position = (from p in employee.Positions
+                                        where employee.id == p.EmployeeId && p.End == null
+                         select p).FirstOrDefault();
+            if(position == null) {
+                return BadRequest("Employee doesn't have a postion record - probably the employee was archived already");
+            }
+            
+            bool newPosition = e.StartingDate != employee.StartingDate || e.PositionId != position.PositionId;
             if(DateOnly.FromDateTime(DateTime.Now) <= e.DateOfBirth){
                 return BadRequest($"Date of birth should be smaller than {DateOnly.FromDateTime(DateTime.Now)}");
             }
-            if(e.StartingDate != employee.StartingDate && e.PositionId != p[index].PositionId && DateOnly.FromDateTime(DateTime.Now) > e.StartingDate){
+            if(!newPosition && DateOnly.FromDateTime(DateTime.Now) > e.StartingDate){
                 return BadRequest($"Starting date should be greater or equal to {DateOnly.FromDateTime(DateTime.Now)}");
             }
                 
@@ -111,15 +117,17 @@ namespace backend.Controllers
             employee.StartingDate = e.StartingDate;
             employee.Salary = e.Salary;
 
-
-            p[index].End = e.StartingDate;
-            p.Add(new PositionsEmployee(){
-                Employee = employee,
-                PositionId = e.PositionId,
-                Position = await _context.Positions.FindAsync(e.PositionId),
-                Start = e.StartingDate
-            });
-            employee.Positions = p;
+            if(newPosition){
+                System.Console.WriteLine("new Position for employee");
+                position.End = e.StartingDate;
+                employee.Positions.Add(new PositionsEmployee(){
+                    Employee = employee,
+                    PositionId = e.PositionId,
+                    Position = await _context.Positions.FindAsync(e.PositionId),
+                    Start = e.StartingDate
+                });
+                //employee.Positions = p;
+            }
             try
             {
                 await _context.SaveChangesAsync();
@@ -146,14 +154,15 @@ namespace backend.Controllers
             if(employee == null){
                 return NotFound();
             }
-            List<PositionsEmployee> p = employee.Positions.ToList();
-            var index = p.FindIndex(i=> i.End == null);
-            if(index == -1){
-                return NotFound();
+            var position = (from p in employee.Positions
+                                        where employee.id == p.EmployeeId && p.End == null
+                         select p).FirstOrDefault();
+            if(position == null) {
+                return BadRequest("Employee doesn't have a postion unended record - probably the employee was archived already");
             }
+            
 
-            p[index].End = DateOnly.FromDateTime(DateTime.Now);
-            employee.Positions = p;
+            position.End = DateOnly.FromDateTime(DateTime.Now) > position.Start ? DateOnly.FromDateTime(DateTime.Now) : position.Start;
             try
             {
                 await _context.SaveChangesAsync();
@@ -206,10 +215,6 @@ namespace backend.Controllers
                 Start = e.StartingDate
             };
 
-            //employee.Positions.Add(position);
-
-
-           //_context.Employees.Add(employee);
             _context.PositionsEmployees.Add(position);
             await _context.SaveChangesAsync();
 
