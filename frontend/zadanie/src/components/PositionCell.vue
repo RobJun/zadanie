@@ -1,25 +1,28 @@
 <script setup lang="ts">
-
+import type { Positions } from '@/models/position';
+import type { PropType } from 'vue';
 </script>
 
 
 <template>
     <div class="employee_row">
-        <h2><RouterLink :to="`/employee/${employee.id}`" class="nav-link">{{employee.name}} {{employee.lastName}}</RouterLink></h2>
-        <p>{{ employee.actPosition }}</p>
-        <button v-if="!$route.path.includes('/archive')" class="btn btn-info" id="Edit" @click="$router.push({path:`/employee/${employee.id}/edit`})">Upraviť</button>
-        <p v-else id="Edit">03.12.2023</p>
-        <button class="btn btn-danger" id="Delete" @click="$emit('delete',{id: employee.id, name: employee.name + ' ' +employee.lastName})">Vymazať</button>
+        <h2>{{ position.name }}</h2>
+        <button class="btn btn-danger" id="Delete" @click="deletePosition">Delete</button>
     </div>
 </template>
 
 <script lang="ts">
 export default { 
     props : {
-        employee : {
-            type: Object,
+        position : {
+            type: Object as PropType<Positions>,
             required: true,
             defaulat: ()=>({})
+        }
+    },
+    methods : {
+        deletePosition(){
+            this.$emit('delete',{id: this.position.id, name: this.position.name})
         }
     }
 }

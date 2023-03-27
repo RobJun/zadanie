@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import EmployeeCell from './EmployeeCell.vue'
-import type {Employee} from '../objects/employee'
+import type {Employee} from '../models/employee'
 </script>
 
 
 <template>
     <ul>
         <li v-for="employee in data">
-            <EmployeeCell :employee="employee"/>
+            <EmployeeCell :employee="employee" @delete="e=>$emit('delete',e)"/>
         </li>
     </ul>
 </template>
