@@ -2,6 +2,8 @@
 import PositionTable from '@/components/PositionTable.vue';
 import myModal from '@/components/myModal.vue'
 import {Modal} from 'bootstrap'
+import type { Positions } from '@/models/position';
+import axios from 'axios';
 
 
 </script>
@@ -12,8 +14,9 @@ import {Modal} from 'bootstrap'
       <h1 class="col-10">Pozície</h1>
       <button class="btn col-2 btn-primary" @click="openModalCreate">Pridať pozíciu</button>
     </div>
-    <PositionTable :data="[{id : 1,name:'progrmator'},{id : 2,name:'progrmator'},{id : 3,name:'progrmator'},{id : 4,name:'progrmator'}]"
-                  @delete="openModal" />
+    <PositionTable :data="positions"
+                  @delete="openModal"
+                  :key="rerenderKey" />
     <myModal
       :id="'modal'" 
       :title="state.creating ? 'Vytvorenie ' : 'Vymazanie ' + 'pozície ' + state.name"
@@ -22,7 +25,7 @@ import {Modal} from 'bootstrap'
           <p v-if="!state.creating">Naozaj chcete vymazat poziciu {{state.name}}?</p>
           <div v-else class="form-group">
                 <label for="name">Názov</label>
-                <input type="text" class="form-control" id="name">
+                <input type="text" class="form-control" id="name" v-model="state.name">
             </div>
       </template>
       <template #controls>
@@ -38,22 +41,30 @@ import {Modal} from 'bootstrap'
 export default { 
     data() {
       return {
+        rerenderKey : 0,
         state : {
-          modal : null,
+          modal : {} as Modal,
           name : "",
           creating : false,
-          onCancel :  (event : MouseEvent)=>{console.log('default')},
           onConfirm : (event : MouseEvent)=>{console.log('default')}
-        }
+        },
+        positions : [] as Positions[]
       }
     },
     mounted() {
       this.state.modal = new Modal('#modal')
+      axios.get('http://localhost:5216/api/Positions/')
+            .then(res => this.positions = res.data)
+    },
+    updated() {
+      axios.get('http://localhost:5216/api/Positions/')
+            .then(res => this.positions = res.data)
     },
     methods : {
         openModalCreate(){
           this.state.name =""
           this.state.creating = true
+          this.state.onConfirm = this.createPostion
           this.state.modal?.show()
         },
         openModal(data: {id: Number,name: string}){
@@ -61,13 +72,24 @@ export default {
           this.state.creating = false
           this.state.onConfirm = (event : MouseEvent)=>{
             this.deletePosition(data.id)
-            this.state.modal?.hide()
           }
           this.state.modal?.show()
         },
         deletePosition(id : Number){
-          console.log(id)
-            //TODO
+          axios.delete('http://localhost:5216/api/Positions/'+id)
+          .then(res=>{
+              this.state.modal.hide()
+              this.rerenderKey++})
+        },
+
+        createPostion(){
+          axios.post('http://localhost:5216/api/Positions/',
+          {
+            name: this.state.name
+          })
+            .then(res=>{
+              this.state.modal.hide()
+              this.rerenderKey++})
         }
 
 

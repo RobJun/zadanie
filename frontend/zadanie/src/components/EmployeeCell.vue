@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import { Employee } from '@/models/employee';
+import type { PropType } from 'vue';
+
 
 </script>
 
@@ -6,9 +9,10 @@
 <template>
     <div class="employee_row">
         <h2><RouterLink :to="`/employee/${employee.id}`" class="nav-link">{{employee.name}} {{employee.lastName}}</RouterLink></h2>
-        <p>{{ employee.actPosition }}</p>
+        <p v-if="!$route.path.includes('/archive')">{{ employee.positions.filter(x=>{return x.end === null})[0].position.name }}</p>
+        <p v-else>{{ employee.positions.sort((x,y) => x.end < y.end ? 1 : -1)[0].position.name }}</p>
         <button v-if="!$route.path.includes('/archive')" class="btn btn-info" id="Edit" @click="$router.push({path:`/employee/${employee.id}/edit`})">Upraviť</button>
-        <p v-else id="Edit">03.12.2023</p>
+        <p v-else id="Edit">{{ employee.positions.sort((x,y) => x.end < y.end ? 1 : -1)[0].end }}</p>
         <button class="btn btn-danger" id="Delete" @click="$emit('delete',{id: employee.id, name: employee.name + ' ' +employee.lastName})">Vymazať</button>
     </div>
 </template>
@@ -17,9 +21,9 @@
 export default { 
     props : {
         employee : {
-            type: Object,
+            type: Employee,
             required: true,
-            defaulat: ()=>({})
+            default: ()=>({})
         }
     }
 }

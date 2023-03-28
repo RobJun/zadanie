@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import Table from '@/components/Table.vue';
-import { Employee } from '@/models/employee';
+import type { Employee } from '@/models/employee';
 import myModal from '@/components/myModal.vue'
 import {Modal} from 'bootstrap'
+import axios from 'axios';
 </script>
 
 <template>
@@ -10,11 +11,7 @@ import {Modal} from 'bootstrap'
     <div class="row">
       <h1 class="col-10">Archiv Zamestnancov</h1>
     </div>
-    <Table :data="[new Employee(1,'ahoj','feddo',2323,'23.23.23','programator'),
-                  new Employee(1,'ahoj','feddo',2323,'23.23.23','programator'),
-                  new Employee(1,'ahoj','feddo',2323,'23.23.23','programator'),
-                  new Employee(1,'ahoj','feddo',2323,'23.23.23','programator'),
-                  new Employee(1,'ahoj','feddo',2323,'23.23.23','programator'),]"
+    <Table :key="rerenderKey" :data="employees"
                   @delete="openModal" />
 
 <myModal
@@ -36,16 +33,22 @@ import {Modal} from 'bootstrap'
 export default { 
     data() {
       return {
+        rerenderKey :0,
         state : {
-          modal : null,
+          modal : {} as Modal,
           name : "",
           onCancel :  (event : MouseEvent)=>{console.log('default')},
           onConfirm : (event : MouseEvent)=>{console.log('default')}
-        }
+        },
+        employees : [] as any[]
       }
     },
     mounted() {
       this.state.modal = new Modal('#modal')
+      axios.get('http://localhost:5216/api/Employee/archived')
+      .then(res => {
+        console.log(res.data)
+        this.employees = res.data})
     },
     methods : {
         openModal(data : {id : Number, name : string}){
@@ -53,7 +56,6 @@ export default {
           this.state.modal?.show()
         },
         deletePosition(id : Number){
-          console.log(id)
             //TODO
         }
 

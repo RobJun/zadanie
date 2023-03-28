@@ -1,18 +1,19 @@
+import type {Positions} from '@/models/position'
+type EmployeePosition ={
+    id : Number;
+    positionId : Number;
+    position : Positions;
+    start : string;
+    end : string;
+}
+
 export class Employee {
     id: Number;
     name: string;
     lastName: string;
     salary: Number;
     dateOfBirth: string;
-    actPosition: string;
-
-    public constructor(id: Number, name : string, lastName: string, 
-        salary: Number,dateOfBirth:string,actPosition: string){
-            this.id = id;
-            this.name = name;
-            this.lastName = lastName;
-            this.salary = salary;
-            this.dateOfBirth = dateOfBirth;
-            this.actPosition = actPosition;
-    }
+    address: string;
+    startingDate : string
+    positions : EmployeePosition[]
 }

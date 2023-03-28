@@ -1,5 +1,5 @@
 
 export type Positions = {
-    id : Number
+    id : number
     name : string
 };

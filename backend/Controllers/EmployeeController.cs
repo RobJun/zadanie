@@ -118,15 +118,18 @@ namespace backend.Controllers
             employee.Salary = e.Salary;
 
             if(newPosition){
-                System.Console.WriteLine("new Position for employee");
+                var pos = await _context.Positions.FindAsync(e.PositionId);
+                if(pos == null){
+                    return BadRequest("Non existant position");
+                }
+
                 position.End = e.StartingDate;
                 employee.Positions.Add(new PositionsEmployee(){
                     Employee = employee,
                     PositionId = e.PositionId,
-                    Position = await _context.Positions.FindAsync(e.PositionId),
+                    Position = pos,
                     Start = e.StartingDate
                 });
-                //employee.Positions = p;
             }
             try
             {
@@ -207,11 +210,16 @@ namespace backend.Controllers
                 Salary = e.Salary
 
             };
+
+            var pos = await _context.Positions.FindAsync(e.PositionId);
+            if(pos == null){
+                return BadRequest("Non existant position");
+            }
             
             var position = new PositionsEmployee() {
                 Employee = employee,
                 PositionId = e.PositionId,
-                Position = await _context.Positions.FindAsync(e.PositionId),
+                Position = pos,
                 Start = e.StartingDate
             };
 

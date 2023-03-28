@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import Table from '@/components/Table.vue';
-import { Employee } from '@/models/employee';
+import type { Employee } from '@/models/employee';
 import myModal from '@/components/myModal.vue'
 import {Modal} from 'bootstrap'
+import axios from 'axios'
 </script>
 
 <template>
@@ -11,11 +12,7 @@ import {Modal} from 'bootstrap'
       <h1 class="col-10">Zamestnaci</h1>
       <button class="btn col-2 btn-primary" @click="$router.push({path:'/employee/create'})">Pridať zamestnanca</button>
     </div>
-    <Table :data="[new Employee(1,'ahoj','feddo',2323,'23.23.23','programator'),
-                  new Employee(2,'ahoj1','feddo',2323,'23.23.23','programator'),
-                  new Employee(3,'ahoj2','feddo',2323,'23.23.23','programator'),
-                  new Employee(4,'ahoj3','feddo',2323,'23.23.23','programator'),
-                  new Employee(5,'ahoj4','feddo',2323,'23.23.23','programator'),]"
+    <Table :key="rerenderKey" :data="employees"
                   @delete="openModal" />
   <myModal
   :id="'modal'"
@@ -37,16 +34,24 @@ import {Modal} from 'bootstrap'
 export default { 
     data() {
       return {
+        rerenderKey: 0,
         state : {
-          modal : null,
+          modal : {} as Modal,
           name : "",
           onCancel :  (event : MouseEvent)=>{console.log('default')},
           onConfirm : (event : MouseEvent)=>{console.log('default')}
-        }
+        },
+        employees : [] as any[]
       }
     },
     mounted() {
       this.state.modal = new Modal('#modal')
+      axios.get('http://localhost:5216/api/Employee/actual')
+      .then(res => {
+        console.log(res.data)
+        this.employees = res.data as Employee[]
+        console.log(this.employees)
+      })
     },
     methods : {
         openModal(data : {id : Number, name : string}){
