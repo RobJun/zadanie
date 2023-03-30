@@ -20,6 +20,17 @@ var app = builder.Build();
 
 app.UseCors(builder=> builder.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+
+    var context = services.GetRequiredService<EmployeeContext>();
+    if (context.Database.GetPendingMigrations().Any())
+    {
+        context.Database.Migrate();
+    }
+}
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

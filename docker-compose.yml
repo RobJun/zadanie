@@ -1,0 +1,40 @@
+version: '3.9'
+services:
+  backend:
+    container_name: backend
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile
+    ports:
+      - 5216:80
+    depends_on:
+      - db
+    networks: 
+      - abridged
+  frontend:
+    container_name: web
+    build:
+      context: .
+      dockerfile: ./frontend/zadanie/Dockerfile
+    ports:
+      - 8000:8080
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    container_name: db
+    user: postgres
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./database:/var/lib/postgresql/data
+    networks: 
+      - abridged
+
+
+networks:
+  abridged:
+    driver: bridge

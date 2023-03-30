@@ -78,8 +78,15 @@ namespace backend.Controllers
                 return NotFound();
             }
 
+            var employees = from e in _context.Employees
+                            where !_context.PositionsEmployees
+                                    .Where(i=> i.PositionId != id)
+                                    .Any(i=> i.EmployeeId == e.id)
+                            select e;
             _context.Positions.Remove(positions);
+            _context.Employees.RemoveRange(employees);
             await _context.SaveChangesAsync();
+
 
             return NoContent();
         }
