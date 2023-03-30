@@ -1,8 +1,16 @@
-<script setup lang="ts">
+
+<script lang="ts">
+import { defineComponent } from 'vue'
 import { Employee } from '@/models/employee';
-import type { PropType } from 'vue';
-
-
+export default defineComponent({ 
+    props : {
+        employee : {
+            type: Employee,
+            required: true,
+            default: ()=>({})
+        }
+    }
+})
 </script>
 
 
@@ -17,17 +25,7 @@ import type { PropType } from 'vue';
     </div>
 </template>
 
-<script lang="ts">
-export default { 
-    props : {
-        employee : {
-            type: Employee,
-            required: true,
-            default: ()=>({})
-        }
-    }
-}
-</script>
+
 
 <style lang="scss" scoped>
     .employee_row {

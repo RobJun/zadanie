@@ -1,8 +1,9 @@
 <script lang="ts">
-import axios from 'axios'
 import type { Employee } from '@/models/employee'
 import type { Positions } from '@/models/position'
-export default {
+import { defineComponent } from 'vue'
+import axios from 'axios'
+export default defineComponent({
     data() {
         return {
             disabled : true,
@@ -26,7 +27,7 @@ export default {
         this.newEmployee = this.$route.path.includes('/create')
 
         if(!this.newEmployee){
-            axios.get('http://localhost:5216/api/Employee/'+this.$route.params.id)
+            axios.get(process.env.VUE_APP_API_ENDPOINTS+'/api/Employee/'+this.$route.params.id)
             .then(res => {
                 this.employee = res.data
                 this.form.name = res.data.name
@@ -42,7 +43,7 @@ export default {
             })
         }
         
-            axios.get('http://localhost:5216/api/Positions/')
+            axios.get(process.env.VUE_APP_API_ENDPOINTS+'/api/Positions/')
             .then(res => {
                     this.positions = res.data
                     console.log(this.positions)
@@ -63,17 +64,17 @@ export default {
 
         saveChanges(){
             console.log(this.form)
-            axios.put('http://localhost:5216/api/Employee/'+this.$route.params.id,this.form)
+            axios.put(process.env.VUE_APP_API_ENDPOINTS+'/api/Employee/'+this.$route.params.id,this.form)
             .then(res=> this.$router.back())
 
         },
 
         createEmployee(){
-            axios.post('http://localhost:5216/api/Employee/',this.form)
+            axios.post(process.env.VUE_APP_API_ENDPOINTS+'/api/Employee/',this.form)
             .then(res=> this.$router.back())
         }
     }
-}
+})
 
 </script>
 

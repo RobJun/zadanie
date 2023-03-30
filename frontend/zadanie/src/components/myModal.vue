@@ -1,4 +1,18 @@
+<script lang="ts">
+import { defineComponent } from 'vue'
 
+export default defineComponent({
+    props : {
+        id: {
+          type: String,
+          required: true
+        },
+        title : {
+          type : String
+        },
+    }
+})
+</script>
 
 <template>
 <div class="modal fade" :id="id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -18,17 +32,3 @@
       </div>
     </div>
 </template>
-
-<script lang="ts">
-export default {
-    props : {
-        id: {
-          type: String,
-          required: true
-        },
-        title : {
-          type : String
-        },
-    }
-}
-</script>

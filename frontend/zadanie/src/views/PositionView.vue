@@ -1,11 +1,80 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import PositionTable from '@/components/PositionTable.vue';
 import myModal from '@/components/myModal.vue'
+
+
+</script>
+
+<script lang="ts">
 import {Modal} from 'bootstrap'
 import type { Positions } from '@/models/position';
 import axios from 'axios';
+import { defineComponent } from 'vue'
+export default defineComponent({ 
+    data() {
+      return {
+        rerenderKey : 0,
+        oldData : false,
+        state : {
+          modal : {} as Modal,
+          name : "",
+          creating : false,
+          onConfirm : (event : MouseEvent)=>{console.log('default')}
+        },
+        positions : [] as Positions[]
+      }
+    },
+    mounted() {
+      this.state.modal = new Modal('#modal')
+      axios.get(process.env.VUE_APP_API_ENDPOINTS+'/api/Positions/')
+            .then(res => this.positions = res.data)
+    },
+    updated() {
+      if(this.oldData)
+      axios.get(process.env.VUE_APP_API_ENDPOINTS+'/api/Positions/')
+            .then(res => {
+              this.positions = res.data
+              this.oldData = false;
+            })
+    },
+    methods : {
+        openModalCreate(){
+          this.state.name =""
+          this.state.creating = true
+          this.state.onConfirm = this.createPostion
+          this.state.modal?.show()
+        },
+        openModal(data: {id: Number,name: string}){
+          this.state.name = data.name
+          this.state.creating = false
+          this.state.onConfirm = (event : MouseEvent)=>{
+            this.deletePosition(data.id)
+          }
+          this.state.modal?.show()
+        },
+        deletePosition(id : Number){
+          axios.delete(process.env.VUE_APP_API_ENDPOINTS+'/api/Positions/'+id)
+          .then(res=>{
+              this.state.modal.hide()
+              this.rerenderKey++
+              this.oldData = true})
+        },
+
+        createPostion(){
+          axios.post(process.env.VUE_APP_API_ENDPOINTS+'/api/Positions/',
+          {
+            name: this.state.name
+          })
+            .then(res=>{
+              this.state.modal.hide()
+              this.rerenderKey++
+              this.oldData=true})
+        }
 
 
+
+    }
+})
 </script>
 
 <template>
@@ -37,66 +106,7 @@ import axios from 'axios';
   </main>
 </template>
 
-<script lang="ts">
-export default { 
-    data() {
-      return {
-        rerenderKey : 0,
-        state : {
-          modal : {} as Modal,
-          name : "",
-          creating : false,
-          onConfirm : (event : MouseEvent)=>{console.log('default')}
-        },
-        positions : [] as Positions[]
-      }
-    },
-    mounted() {
-      this.state.modal = new Modal('#modal')
-      axios.get('http://localhost:5216/api/Positions/')
-            .then(res => this.positions = res.data)
-    },
-    updated() {
-      axios.get('http://localhost:5216/api/Positions/')
-            .then(res => this.positions = res.data)
-    },
-    methods : {
-        openModalCreate(){
-          this.state.name =""
-          this.state.creating = true
-          this.state.onConfirm = this.createPostion
-          this.state.modal?.show()
-        },
-        openModal(data: {id: Number,name: string}){
-          this.state.name = data.name
-          this.state.creating = false
-          this.state.onConfirm = (event : MouseEvent)=>{
-            this.deletePosition(data.id)
-          }
-          this.state.modal?.show()
-        },
-        deletePosition(id : Number){
-          axios.delete('http://localhost:5216/api/Positions/'+id)
-          .then(res=>{
-              this.state.modal.hide()
-              this.rerenderKey++})
-        },
 
-        createPostion(){
-          axios.post('http://localhost:5216/api/Positions/',
-          {
-            name: this.state.name
-          })
-            .then(res=>{
-              this.state.modal.hide()
-              this.rerenderKey++})
-        }
-
-
-
-    }
-}
-</script>
 
 <style scoped>
   main > .row {

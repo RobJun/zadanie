@@ -1,9 +1,67 @@
-<script setup lang="ts">
+<script lang="ts" setup>
 import Table from '@/components/Table.vue';
-import type { Employee } from '@/models/employee';
 import myModal from '@/components/myModal.vue'
+
+
+</script>
+<script lang="ts">
+import type { Employee } from '@/models/employee';
 import {Modal} from 'bootstrap'
 import axios from 'axios';
+import { defineComponent } from 'vue'
+
+export default defineComponent({ 
+    data() {
+      return {
+        rerenderKey :0,
+        oldData: false,
+        state : {
+          modal : {} as Modal,
+          name : "",
+          onCancel :  (event : MouseEvent)=>{console.log('default')},
+          onConfirm : (event : MouseEvent)=>{console.log('default')}
+        },
+        employees : [] as any[]
+      }
+    },
+    mounted() {
+      this.state.modal = new Modal('#modal')
+      axios.get(process.env.VUE_APP_API_ENDPOINTS+'/api/Employee/archived')
+      .then(res => {
+        console.log(res.data)
+        this.employees = res.data})
+    },
+    updated() {
+      if(this.oldData)
+        axios.get(process.env.VUE_APP_API_ENDPOINTS+'/api/Employee/archived')
+      .then(res => {
+        console.log(res.data)
+        this.employees = res.data
+        this.oldData = false})
+    },
+    methods : {
+        openModal(data : {id : Number, name : string}){
+          this.state.name = data.name
+          this.state.modal?.show()
+          this.state.onConfirm = (e : MouseEvent) => {
+            this.deleteEmployee(data.id)
+          }
+        },
+        deleteEmployee(id : Number){
+            axios.delete(process.env.VUE_APP_API_ENDPOINTS+'/api/Employee/'+id)
+            .then(
+              res=>{
+                this.state.modal.hide()
+                this.rerenderKey++
+                this.oldData=true
+              }
+            )
+        }
+
+
+
+    }
+})
 </script>
 
 <template>
@@ -23,47 +81,13 @@ import axios from 'axios';
   </template>
       <template #controls>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušiť</button>
-          <button  type="button" class="btn btn-danger" @click="e=>{}">Vymazať</button>
+          <button  type="button" class="btn btn-danger" @click="state.onConfirm">Vymazať</button>
       </template>
 </myModal>
   </main>
 </template>
 
-<script lang="ts">
-export default { 
-    data() {
-      return {
-        rerenderKey :0,
-        state : {
-          modal : {} as Modal,
-          name : "",
-          onCancel :  (event : MouseEvent)=>{console.log('default')},
-          onConfirm : (event : MouseEvent)=>{console.log('default')}
-        },
-        employees : [] as any[]
-      }
-    },
-    mounted() {
-      this.state.modal = new Modal('#modal')
-      axios.get('http://localhost:5216/api/Employee/archived')
-      .then(res => {
-        console.log(res.data)
-        this.employees = res.data})
-    },
-    methods : {
-        openModal(data : {id : Number, name : string}){
-          this.state.name = data.name
-          this.state.modal?.show()
-        },
-        deletePosition(id : Number){
-            //TODO
-        }
 
-
-
-    }
-}
-</script>
 
 <style scoped>
   main > .row {

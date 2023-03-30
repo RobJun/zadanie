@@ -16,4 +16,15 @@ export class Employee {
     address: string;
     startingDate : string
     positions : EmployeePosition[]
+
+    constructor(){
+        this.id = -1
+        this.name = ""
+        this.lastName =""
+        this.salary = 0
+        this.dateOfBirth = ""
+        this.address = ""
+        this.startingDate = ""
+        this.positions = new Array<EmployeePosition>
+    }
 }

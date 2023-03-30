@@ -1,8 +1,20 @@
-<script setup lang="ts">
-import type { Positions } from '@/models/position';
+<script lang="ts" setup>
 import PositionCell from './PositionCell.vue';
 </script>
-
+<script lang="ts">
+import type { Positions } from '@/models/position';
+import { defineComponent } from 'vue'
+export default defineComponent({
+    props: {
+        data: Array<Positions>
+    },
+    methods:{
+        deletePosition(position : {id: Number,name:string}) {
+            this.$emit('delete',position)
+        }
+    }
+})
+</script>
 
 <template>
     <ul>
@@ -12,18 +24,6 @@ import PositionCell from './PositionCell.vue';
     </ul>
 </template>
 
-<script lang="ts">
-export default {
-    props: {
-        data: Array<Positions>
-    },
-    methods:{
-        deletePosition(position : {id: Number,name:string}) {
-            this.$emit('delete',position)
-        }
-    }
-}
-</script>
 
 <style scoped>
     li {

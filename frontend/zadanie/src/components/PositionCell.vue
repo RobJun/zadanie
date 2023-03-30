@@ -1,18 +1,9 @@
-<script setup lang="ts">
+<script lang="ts">
 import type { Positions } from '@/models/position';
 import type { PropType } from 'vue';
-</script>
+import { defineComponent } from 'vue'
 
-
-<template>
-    <div class="employee_row">
-        <h2>{{ position.name }}</h2>
-        <button class="btn btn-danger" id="Delete" @click="deletePosition">Delete</button>
-    </div>
-</template>
-
-<script lang="ts">
-export default { 
+export default defineComponent({ 
     props : {
         position : {
             type: Object as PropType<Positions>,
@@ -25,8 +16,17 @@ export default {
             this.$emit('delete',{id: this.position.id, name: this.position.name})
         }
     }
-}
+})
 </script>
+
+<template>
+    <div class="employee_row">
+        <h2>{{ position.name }}</h2>
+        <button class="btn btn-danger" id="Delete" @click="deletePosition">Delete</button>
+    </div>
+</template>
+
+
 
 <style lang="scss" scoped>
     .employee_row {
