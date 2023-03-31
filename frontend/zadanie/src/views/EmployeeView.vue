@@ -45,9 +45,11 @@ export default defineComponent({
           this.state.name = data.name
           this.state.modal?.show()
           this.state.onArchive = (e: MouseEvent)=>{
+            console.log(data.id)
             this.archiveEmployee(data.id)
           }
           this.state.onDelete = (e : MouseEvent)=>{
+            console.log(data.id)
             this.deleteEmployee(data.id)
           }
         },
@@ -91,8 +93,8 @@ export default defineComponent({
   </template>
       <template #controls>
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zrušiť</button>
-          <button  type="button" class="btn btn-danger" @click="">Vymazať</button>
-          <button  type="button" class="btn btn-warning" @click="">Archivovať</button>
+          <button  type="button" class="btn btn-danger" @click="state.onDelete">Vymazať</button>
+          <button  type="button" class="btn btn-warning" @click="state.onArchive">Archivovať</button>
       </template>
 </myModal>
   </main>

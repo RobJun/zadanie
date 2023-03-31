@@ -4,6 +4,7 @@ WORKDIR /app
 COPY ./frontend/zadanie/package*.json ./
 RUN npm install
 COPY ./frontend/zadanie .
+RUN cat ./.env
 RUN npm run build
 
 
