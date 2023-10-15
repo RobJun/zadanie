@@ -1,9 +1,9 @@
 FROM node:lts-alpine as build-stage
 RUN npm install -g http-server
 WORKDIR /app
-COPY ./frontend/zadanie/package*.json ./
+COPY ./package*.json ./
 RUN npm install
-COPY ./frontend/zadanie .
+COPY . .
 RUN cat ./.env
 RUN npm run build
 

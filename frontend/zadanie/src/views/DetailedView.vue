@@ -27,7 +27,7 @@ export default defineComponent({
         this.newEmployee = this.$route.path.includes('/create')
 
         if(!this.newEmployee){
-            axios.get(process.env.VUE_APP_API_ENDPOINTS+'/api/Employee/'+this.$route.params.id)
+            axios.get(window.location.origin+'/api/Employee/'+this.$route.params.id)
             .then(res => {
                 this.employee = res.data
                 this.form.name = res.data.name
@@ -43,7 +43,7 @@ export default defineComponent({
             })
         }
         
-            axios.get(process.env.VUE_APP_API_ENDPOINTS+'/api/Positions/')
+            axios.get(window.location.origin+'/api/Positions/')
             .then(res => {
                     this.positions = res.data
                     console.log(this.positions)
@@ -64,13 +64,13 @@ export default defineComponent({
 
         saveChanges(){
             console.log(this.form)
-            axios.put(process.env.VUE_APP_API_ENDPOINTS+'/api/Employee/'+this.$route.params.id,this.form)
+            axios.put(window.location.origin+'/api/Employee/'+this.$route.params.id,this.form)
             .then(res=> this.$router.back())
 
         },
 
         createEmployee(){
-            axios.post(process.env.VUE_APP_API_ENDPOINTS+'/api/Employee/',this.form)
+            axios.post(window.location.origin+'/api/Employee/',this.form)
             .then(res=> this.$router.back())
         }
     }

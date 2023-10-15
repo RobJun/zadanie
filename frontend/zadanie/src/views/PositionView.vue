@@ -26,12 +26,12 @@ export default defineComponent({
     },
     mounted() {
       this.state.modal = new Modal('#modal')
-      axios.get(process.env.VUE_APP_API_ENDPOINTS+'/api/Positions/')
+      axios.get(window.location.origin+'/api/Positions/')
             .then(res => this.positions = res.data)
     },
     updated() {
       if(this.oldData)
-      axios.get(process.env.VUE_APP_API_ENDPOINTS+'/api/Positions/')
+      axios.get(window.location.origin+'/api/Positions/')
             .then(res => {
               this.positions = res.data
               this.oldData = false;
@@ -53,7 +53,7 @@ export default defineComponent({
           this.state.modal?.show()
         },
         deletePosition(id : Number){
-          axios.delete(process.env.VUE_APP_API_ENDPOINTS+'/api/Positions/'+id)
+          axios.delete(window.location.origin+'/api/Positions/'+id)
           .then(res=>{
               this.state.modal.hide()
               this.rerenderKey++
@@ -61,7 +61,7 @@ export default defineComponent({
         },
 
         createPostion(){
-          axios.post(process.env.VUE_APP_API_ENDPOINTS+'/api/Positions/',
+          axios.post(window.location.origin+'/api/Positions/',
           {
             name: this.state.name
           })

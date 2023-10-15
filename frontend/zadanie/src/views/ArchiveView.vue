@@ -26,14 +26,14 @@ export default defineComponent({
     },
     mounted() {
       this.state.modal = new Modal('#modal')
-      axios.get(process.env.VUE_APP_API_ENDPOINTS+'/api/Employee/archived')
+      axios.get(window.location.origin+'/api/Employee/archived')
       .then(res => {
         console.log(res.data)
         this.employees = res.data})
     },
     updated() {
       if(this.oldData)
-        axios.get(process.env.VUE_APP_API_ENDPOINTS+'/api/Employee/archived')
+        axios.get(window.location.origin+'/api/Employee/archived')
       .then(res => {
         console.log(res.data)
         this.employees = res.data
@@ -48,7 +48,7 @@ export default defineComponent({
           }
         },
         deleteEmployee(id : Number){
-            axios.delete(process.env.VUE_APP_API_ENDPOINTS+'/api/Employee/'+id)
+            axios.delete(window.location.origin+'/api/Employee/'+id)
             .then(
               res=>{
                 this.state.modal.hide()

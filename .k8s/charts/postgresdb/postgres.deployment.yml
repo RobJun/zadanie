@@ -1,0 +1,84 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-pv
+  labels:
+    type: local 
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2Gi 
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/run/desktop/mnt/host/c/Users/Robert/Documents/zadanie-2ring/database" 
+
+    
+---
+
+apiVersion: v1
+kind: PersistentVolumeClaim 
+metadata:
+  name: postgresql-pvc
+  namespace: as-test
+spec:
+  storageClassName: manual
+  volumeName: postgres-pv
+  accessModes:
+    - ReadWriteMany 
+  resources:
+    requests:
+      storage: 2Gi 
+
+---
+
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-secret
+  namespace: as-test
+  labels:
+    app: postgres-db
+data:
+  POSTGRES_DB: postgres
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-db
+  namespace: as-test
+spec:
+  replicas: 1 
+  selector:
+    matchLabels:
+      app: postgres-db
+  template:
+    metadata:
+      labels:
+        app: postgres-db
+    spec:
+      containers:
+        - name: postgres-db
+          image: postgres:14.1-alpine 
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - configMapRef:
+                name: postgres-secret
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: db-data
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+      volumes:
+        - name: db-data
+          persistentVolumeClaim:
+            claimName: postgresql-pvc
