@@ -1,0 +1,7 @@
+apiVersion: v2
+name: "backend"
+version: "1"
+dependencies:
+  - name: "library-charts"
+    version: "1"
+    repository: "file://../library-charts"
