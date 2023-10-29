@@ -1,0 +1,6 @@
+kubectl create-namespace as-zadanie
+
+helm install backend backend/ --values backend/values.yaml --namespace as-zadanie
+helm install frontend vue/ --values vue/values.yaml --namespace as-zadanie
+helm install postgres postgres/ --values postgres/values.yaml --namespace as-zadanie
+
