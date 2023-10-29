@@ -1,0 +1,6 @@
+image:
+  name: "zadanie-backend"
+  tag: 1
+  pullPolicy: Never
+namespace: "test"
+hostname: "localhost"

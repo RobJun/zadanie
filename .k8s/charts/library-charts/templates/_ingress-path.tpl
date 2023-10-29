@@ -9,6 +9,8 @@ kind: Ingress
 metadata:
   name: {{$appname}}
   namespace: {{$.Release.Namespace}}
+  annotations:
+    kubernetes.io/ingress.class: nginx
 spec:
   ingressClassName: nginx
   rules:

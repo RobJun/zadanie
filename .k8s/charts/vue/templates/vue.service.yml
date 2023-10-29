@@ -1,1 +1,0 @@
-{{- include "clusterip.service" (list . .Values.port 8080) -}}

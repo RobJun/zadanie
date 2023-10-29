@@ -1,1 +1,0 @@
-{{- include "ingress-path" (list . "/" .Values.name .Values.port .Values.hostname) -}}
