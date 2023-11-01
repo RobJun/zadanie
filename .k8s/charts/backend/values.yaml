@@ -2,7 +2,5 @@ image:
   name: "zadanie-backend"
   tag: 1
   pullPolicy: Never
-name: "backend"
-namespace: "test"
 hostname: "localhost"
 port: 5216

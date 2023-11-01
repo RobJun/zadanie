@@ -1,0 +1,25 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+helmGlobals:
+  chartHome: ../../../charts
+helmCharts:
+  - name: backend
+    releaseName: as-zadanie
+    namespace: as-zadanie
+    valuesFile: ../../base/values.yaml
+    additionalValuesFiles:
+      - ./values.yaml
+  - name: frontend
+    releaseName: as-zadanie
+    namespace: as-zadanie
+    valuesFile: ../../base/values.yaml
+    additionalValuesFiles:
+      - ./values.yaml
+  - name: postgres
+    releaseName: as-zadanie
+    namespace: as-zadanie
+    valuesFile: ../../base/values.yaml
+    additionalValuesFiles:
+      - ./values.yaml
+resources:
+  - ../../base
