@@ -4,19 +4,19 @@ helmGlobals:
   chartHome: ../../../charts
 helmCharts:
   - name: backend
-    releaseName: as-zadanie
+    releaseName: backend
     namespace: as-zadanie
     valuesFile: ../../base/values.yaml
     additionalValuesFiles:
       - ./values.yaml
   - name: frontend
-    releaseName: as-zadanie
+    releaseName: frontend
     namespace: as-zadanie
     valuesFile: ../../base/values.yaml
     additionalValuesFiles:
       - ./values.yaml
   - name: postgres
-    releaseName: as-zadanie
+    releaseName: postgres
     namespace: as-zadanie
     valuesFile: ../../base/values.yaml
     additionalValuesFiles:

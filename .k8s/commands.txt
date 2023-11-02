@@ -1,8 +1,9 @@
 kubectl create-namespace as-zadanie
 
-helm dependency build postgres
-
+helm dependency build {postgres|backend|frontend}
 helm install postgres postgres/ --values postgres/values.yaml --namespace as-zadanie
 helm install backend backend/ --values backend/values.yaml --namespace as-zadanie
 helm install frontend frontend/ --values frontend/values.yaml --namespace as-zadanie
 
+kustomize build -o ../../../build --enable-helm --load-restrictor=LoadRestrictionsNone
+kustomize build  --enable-helm --load-restrictor=LoadRestrictionsNone | kubectl apply
