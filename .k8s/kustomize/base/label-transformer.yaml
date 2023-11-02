@@ -4,6 +4,7 @@ metadata:
   name: global-labels
 labels:
   app.kubernetes.io/managed-by: as-zadanie
+  app.kubernetes.io/part-of: as-zadanie
 fieldSpecs:
   - path: metadata/labels
     create: true

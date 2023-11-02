@@ -30,4 +30,4 @@ spec:
       volumes:
         - name: db-data
           persistentVolumeClaim:
-            claimName: postgresql-pvc
+            claimName: {{.Release.Name}}-pvc

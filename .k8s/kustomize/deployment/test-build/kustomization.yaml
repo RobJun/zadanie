@@ -23,4 +23,23 @@ helmCharts:
     valuesFile: ./values.yaml
     additionalValuesFiles:
       - ../../base/values.yaml
+
+
+patches:
+  - target:
+      kind: PersistentVolume
+      name: postgres-pv
+    patch: |-
+      - op: replace
+        path: /spec/capacity/storage
+        value: 1Gi
+  - target:
+      kind: PersistentVolumeClaim
+      name: postgres-pvc
+    patch: |-
+      - op: replace
+        path: /spec/resources/requests/storage
+        value: 1Gi
+
+      
       

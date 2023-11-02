@@ -3,4 +3,4 @@ kind: Kustomization
 generatorOptions:
   disableNameSuffixHash: true
 transformers:
-  - ./label-transformer.yaml
+  - label-transformer.yaml
