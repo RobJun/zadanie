@@ -1,3 +1,3 @@
 hostname: 'localhost'
 image:
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
